@@ -1,0 +1,28 @@
+# Node modules
+node_modules/
+
+# CDK output and context
+cdk.out/
+cdk.context.json
+
+# AWS credentials and config
+.aws/
+
+# Logs
+*.log
+
+# TypeScript build output
+dist/
+build/
+
+# IDE and OS files
+.DS_Store
+.vscode/
+.env
+.env.*
+
+# Jest coverage
+coverage/
+
+# Misc
+*.tsbuildinfo
