@@ -1,10 +1,10 @@
 import { Stack, StackProps } from 'aws-cdk-lib';
 import { Construct } from 'constructs';
-import { Code, Function as LambdaFunction, Runtime } from 'aws-cdk-lib/aws-lambda';
-import path = require('node:path');
+import { Runtime } from 'aws-cdk-lib/aws-lambda';
 import { LambdaIntegration } from 'aws-cdk-lib/aws-apigateway';
 import { ITable } from 'aws-cdk-lib/aws-dynamodb';
 import { NodejsFunction } from 'aws-cdk-lib/aws-lambda-nodejs';
+import path = require('path');
 
 interface LambdaStackProps extends StackProps {
     animalsTable: ITable;
@@ -19,8 +19,8 @@ export class LambdaStack extends Stack {
         // Define your Lambda function here
         const helloLambda = new NodejsFunction(this, 'HelloLambda', {
             runtime: Runtime.NODEJS_20_X,
-            handler: 'hello.main',
-            code: Code.fromAsset(path.resolve(__dirname, '../../services')),
+            handler: 'handler',
+            entry: path.resolve(__dirname, '../../services/hello.ts'),
             environment: {
                 TABLE_NAME: props.animalsTable.tableName
             }
