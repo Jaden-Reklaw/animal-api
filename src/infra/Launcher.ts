@@ -1,4 +1,4 @@
-import  { App } from 'aws-cdk-lib';
+import { App } from 'aws-cdk-lib';
 import { DataStack } from './stacks/DataStack';
 import { LambdaStack } from './stacks/LambdaStack';
 import { RestApiStack } from './stacks/RestApiStack';
@@ -9,5 +9,5 @@ const lambdaStack = new LambdaStack(app, 'LambdaStack', {
     animalsTable: dataStack.animalsTable
 });
 new RestApiStack(app, 'RestApiStack', {
-    lambdaIntegration: lambdaStack.lambdaIntegration
+    animalsLambdaIntegration: lambdaStack.animalsLambdaIntegration
 });

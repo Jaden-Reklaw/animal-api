@@ -1,7 +1,7 @@
 import { RemovalPolicy, Stack, StackProps } from 'aws-cdk-lib';
 import { AttributeType, ITable, Table } from 'aws-cdk-lib/aws-dynamodb';
 import { Construct } from 'constructs';
-import { getSuffixFromStack } from '../Util';
+import { getSuffixFromStack } from '../../utils/stackUtil';
 
 export class DataStack extends Stack {
     public readonly animalsTable: ITable;
