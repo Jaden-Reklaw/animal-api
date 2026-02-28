@@ -3,7 +3,7 @@ import { LambdaIntegration, RestApi } from 'aws-cdk-lib/aws-apigateway';
 import { Construct } from 'constructs';
 
 interface RestApiStackProps extends StackProps {
-    lambdaIntegration: LambdaIntegration; // Replace 'any' with the actual type of your Lambda integration
+    animalsLambdaIntegration: LambdaIntegration; 
 }
 
 export class RestApiStack extends Stack {
@@ -13,6 +13,9 @@ export class RestApiStack extends Stack {
 
         const api = new RestApi(this, 'AnimalsApi');
         const animalsResource = api.root.addResource('animals');
-        animalsResource.addMethod('GET', props.lambdaIntegration);
+        animalsResource.addMethod('GET', props.animalsLambdaIntegration);
+        animalsResource.addMethod('POST', props.animalsLambdaIntegration);
+        animalsResource.addMethod('PUT', props.animalsLambdaIntegration);
+        animalsResource.addMethod('DELETE', props.animalsLambdaIntegration);
     }
 }

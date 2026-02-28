@@ -5,38 +5,28 @@ import { LambdaIntegration } from 'aws-cdk-lib/aws-apigateway';
 import { ITable } from 'aws-cdk-lib/aws-dynamodb';
 import { NodejsFunction } from 'aws-cdk-lib/aws-lambda-nodejs';
 import path = require('path');
-import { Effect, PolicyStatement } from 'aws-cdk-lib/aws-iam';
 
 interface LambdaStackProps extends StackProps {
     animalsTable: ITable;
 }
+
 export class LambdaStack extends Stack {
 
-    public readonly lambdaIntegration: LambdaIntegration;
+    public readonly animalsLambdaIntegration: LambdaIntegration;
 
     constructor(scope: Construct, id: string, props: LambdaStackProps) {
         super(scope, id, props);
 
         // Define your Lambda function here
-        const helloLambda = new NodejsFunction(this, 'HelloLambda', {
+        const animalsLambda = new NodejsFunction(this, 'AnimalsLambda', {
             runtime: Runtime.NODEJS_20_X,
             handler: 'handler',
-            entry: path.resolve(__dirname, '../../services/hello.ts'),
+            entry: path.resolve(__dirname, '../../services/animals/handler.ts'),
             environment: {
                 TABLE_NAME: props.animalsTable.tableName
             }
         });
 
-        helloLambda.addToRolePolicy(new PolicyStatement({
-            effect: Effect.ALLOW,
-            actions: [
-                's3:ListAllMyBuckets',
-                's3:ListBucket'
-            ],
-            resources: ['*'] //bad practice, but for demo purposes we will allow listing all buckets
-        }));
-            
-
-        this.lambdaIntegration = new LambdaIntegration(helloLambda);
+        this.animalsLambdaIntegration = new LambdaIntegration(animalsLambda);
     }
 }

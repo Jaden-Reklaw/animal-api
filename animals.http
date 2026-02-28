@@ -1,2 +1,8 @@
-GET https://au96yw3iw0.execute-api.us-east-2.amazonaws.com/prod/animals
+GET https://vwdwtjke27.execute-api.us-east-2.amazonaws.com/prod/animals
+###
+POST https://vwdwtjke27.execute-api.us-east-2.amazonaws.com/prod/animals
+###
+PUT https://vwdwtjke27.execute-api.us-east-2.amazonaws.com/prod/animals
+###
+DELETE https://vwdwtjke27.execute-api.us-east-2.amazonaws.com/prod/animals
 ###
