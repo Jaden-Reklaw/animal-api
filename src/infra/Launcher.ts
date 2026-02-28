@@ -4,8 +4,10 @@ import { LambdaStack } from './stacks/LambdaStack';
 import { RestApiStack } from './stacks/RestApiStack';
 
 const app = new App();
-new DataStack(app, 'DataStack');
-const lambdaStack = new LambdaStack(app, 'LambdaStack');
+const dataStack = new DataStack(app, 'DataStack');
+const lambdaStack = new LambdaStack(app, 'LambdaStack', {
+    animalsTable: dataStack.animalsTable
+});
 new RestApiStack(app, 'RestApiStack', {
     lambdaIntegration: lambdaStack.lambdaIntegration
 });
