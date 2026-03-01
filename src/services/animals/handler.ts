@@ -1,6 +1,9 @@
 import { APIGatewayProxyEvent, APIGatewayProxyResult, Context } from "aws-lambda";
-import { v4 } from "uuid";
 import { HttpMethod } from "../../enums/httpMethod";
+import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
+import { postAnimal } from "./data";
+
+const ddbClient = new DynamoDBClient({});
 
 export const handler = async (
     event: APIGatewayProxyEvent,
@@ -15,8 +18,9 @@ export const handler = async (
                 message = "Handling GET request";
                 break;
             case HttpMethod.POST:
-                message = "Handling POST request";
-                break;
+                const response = await postAnimal(event, ddbClient);
+                return response;
+                
             case HttpMethod.PUT:
                 message = "Handling PUT request";
                 break;
@@ -37,7 +41,7 @@ export const handler = async (
         console.error("Error handling request:", error);
         return {
             statusCode: 500,
-            body: JSON.stringify({ message: "Internal Server Error" }),
+            body: JSON.stringify(error.message),
         };
     } finally {
         console.log("Request processing completed.");

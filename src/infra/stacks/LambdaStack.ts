@@ -5,6 +5,7 @@ import { LambdaIntegration } from 'aws-cdk-lib/aws-apigateway';
 import { ITable } from 'aws-cdk-lib/aws-dynamodb';
 import { NodejsFunction } from 'aws-cdk-lib/aws-lambda-nodejs';
 import path = require('path');
+import { Effect, PolicyStatement } from 'aws-cdk-lib/aws-iam';
 
 interface LambdaStackProps extends StackProps {
     animalsTable: ITable;
@@ -26,6 +27,16 @@ export class LambdaStack extends Stack {
                 TABLE_NAME: props.animalsTable.tableName
             }
         });
+
+        animalsLambda.addToRolePolicy(new PolicyStatement({
+            effect: Effect.ALLOW,
+            resources: [props.animalsTable.tableArn],
+            actions: [
+                'dynamodb:PutItem'
+            ]
+        }))
+
+
 
         this.animalsLambdaIntegration = new LambdaIntegration(animalsLambda);
     }

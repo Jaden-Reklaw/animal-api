@@ -1,6 +1,11 @@
 GET https://vwdwtjke27.execute-api.us-east-2.amazonaws.com/prod/animals
 ###
 POST https://vwdwtjke27.execute-api.us-east-2.amazonaws.com/prod/animals
+content-type: application/json
+
+{
+    "location": "Paris"
+}
 ###
 PUT https://vwdwtjke27.execute-api.us-east-2.amazonaws.com/prod/animals
 ###
