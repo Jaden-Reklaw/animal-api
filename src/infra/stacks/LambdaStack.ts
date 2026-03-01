@@ -20,7 +20,7 @@ export class LambdaStack extends Stack {
 
         // Define your Lambda function here
         const animalsLambda = new NodejsFunction(this, 'AnimalsLambda', {
-            runtime: Runtime.NODEJS_20_X,
+            runtime: Runtime.NODEJS_22_X,
             handler: 'handler',
             entry: path.resolve(__dirname, '../../services/animals/handler.ts'),
             environment: {
@@ -32,7 +32,11 @@ export class LambdaStack extends Stack {
             effect: Effect.ALLOW,
             resources: [props.animalsTable.tableArn],
             actions: [
-                'dynamodb:PutItem'
+                'dynamodb:PutItem',
+                'dynamodb:Scan',
+                'dynamodb:GetItem',
+                'dynamodb:UpdateItem',
+                'dynamodb:DeleteItem'
             ]
         }))
 

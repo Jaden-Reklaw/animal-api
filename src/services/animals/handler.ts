@@ -1,9 +1,11 @@
 import { APIGatewayProxyEvent, APIGatewayProxyResult, Context } from "aws-lambda";
 import { HttpMethod } from "../../enums/httpMethod";
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
-import { postAnimal } from "./data";
+import { DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb";
+import { getAnimals, getAnimal, postAnimal, updateAnimal, deleteAnimal } from "./data";
 
 const ddbClient = new DynamoDBClient({});
+const ddbDocClient = DynamoDBDocumentClient.from(ddbClient);
 
 export const handler = async (
     event: APIGatewayProxyEvent,
@@ -11,30 +13,31 @@ export const handler = async (
 ): Promise<APIGatewayProxyResult> => {
     try {
 
-        let message: string;
+        let response: APIGatewayProxyResult;
 
         switch (event.httpMethod) {
             case HttpMethod.GET:
-                message = "Handling GET request";
-                break;
-            case HttpMethod.POST:
-                const response = await postAnimal(event, ddbClient);
+                if (event.queryStringParameters && 'id' in event.queryStringParameters)
+                    response = await getAnimal(event, ddbDocClient);
+                else
+                    response = await getAnimals(ddbDocClient);
                 return response;
-                
+            case HttpMethod.POST:
+                response = await postAnimal(event, ddbDocClient);
+                return response;
             case HttpMethod.PUT:
-                message = "Handling PUT request";
-                break;
+                response = await updateAnimal(event, ddbDocClient);
+                return response;
             case HttpMethod.DELETE:
-                message = "Handling DELETE request";
-                break;
+                response = await deleteAnimal(event, ddbDocClient);
+                return response
             default:
-                message = "Handling unknown HTTP method";
+                response = {
+                    statusCode: 400,
+                    body: JSON.stringify({ message: "Handling unknown HTTP method" }),
+                };
                 break;
         }
-        const response = {
-            statusCode: 200,
-            body: JSON.stringify(message),
-        };
 
         return response;
     } catch (error) {

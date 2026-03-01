@@ -1,13 +1,28 @@
 GET https://vwdwtjke27.execute-api.us-east-2.amazonaws.com/prod/animals
 ###
+
+
+GET https://vwdwtjke27.execute-api.us-east-2.amazonaws.com/prod/animals?id=e3f1a82b-06cd-471b-ba63-d407e0d10938
+###
+
+
 POST https://vwdwtjke27.execute-api.us-east-2.amazonaws.com/prod/animals
 content-type: application/json
 
 {
-    "location": "Paris"
+    "location": "Los Angeles"
 }
 ###
-PUT https://vwdwtjke27.execute-api.us-east-2.amazonaws.com/prod/animals
+
+
+PUT https://vwdwtjke27.execute-api.us-east-2.amazonaws.com/prod/animals?id=e3f1a82b-06cd-471b-ba63-d407e0d10938
+content-type: application/json
+
+{
+    "location": "Boston"
+}
 ###
-DELETE https://vwdwtjke27.execute-api.us-east-2.amazonaws.com/prod/animals
+
+
+DELETE https://vwdwtjke27.execute-api.us-east-2.amazonaws.com/prod/animals?id=e3f1a82b-06cd-471b-ba63-d407e0d10938
 ###
