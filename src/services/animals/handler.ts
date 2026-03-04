@@ -3,6 +3,7 @@ import { HttpMethod } from "../../enums/httpMethod";
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import { DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb";
 import { getAnimals, getAnimal, postAnimal, updateAnimal, deleteAnimal } from "./data";
+import { MissingFieldError } from "../../errors/error";
 
 const ddbClient = new DynamoDBClient({});
 const ddbDocClient = DynamoDBDocumentClient.from(ddbClient);
@@ -42,9 +43,15 @@ export const handler = async (
         return response;
     } catch (error) {
         console.error("Error handling request:", error);
+        if (error instanceof MissingFieldError) {
+            return {
+                statusCode: 400,
+                body: JSON.stringify({ message: error.message }),
+            };
+        }
         return {
             statusCode: 500,
-            body: JSON.stringify(error.message),
+            body: JSON.stringify({ message: error.message }),
         };
     } finally {
         console.log("Request processing completed.");

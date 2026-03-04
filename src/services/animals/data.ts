@@ -1,19 +1,21 @@
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda";
 import { v4 } from "uuid";
-import { 
-    DynamoDBDocumentClient, 
-    GetCommand, 
-    ScanCommand, 
-    PutCommand, 
+import {
+    DynamoDBDocumentClient,
+    GetCommand,
+    ScanCommand,
+    PutCommand,
     UpdateCommand,
     DeleteCommand
- } from "@aws-sdk/lib-dynamodb";
+} from "@aws-sdk/lib-dynamodb";
+import { validateAsAnimal } from "../../validators/validator";
 
 export async function postAnimal(event: APIGatewayProxyEvent, ddbClient: DynamoDBDocumentClient): Promise<APIGatewayProxyResult> {
 
     const randomId = v4().toUpperCase();
     const item = JSON.parse(event.body);
     item.id = randomId;
+    validateAsAnimal(item);
 
     const result = await ddbClient.send(new PutCommand({
         TableName: process.env.TABLE_NAME,
@@ -74,7 +76,7 @@ export async function updateAnimal(event: APIGatewayProxyEvent, ddbClient: Dynam
             UpdateExpression: 'set #zzzNew = :new',
             ExpressionAttributeValues: {
                 ':new': requestBodyValue
-                },
+            },
             ExpressionAttributeNames: {
                 '#zzzNew': requestBodyKey
             },
