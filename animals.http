@@ -2,7 +2,7 @@ GET https://vwdwtjke27.execute-api.us-east-2.amazonaws.com/prod/animals
 ###
 
 
-GET https://vwdwtjke27.execute-api.us-east-2.amazonaws.com/prod/animals?id=e3f1a82b-06cd-471b-ba63-d407e0d10938
+GET https://vwdwtjke27.execute-api.us-east-2.amazonaws.com/prod/animals?id=5B2D5741-EA68-4B88-B44E-560398E5D6AF
 ###
 
 
@@ -10,16 +10,18 @@ POST https://vwdwtjke27.execute-api.us-east-2.amazonaws.com/prod/animals
 content-type: application/json
 
 {
-    "location": "Los Angeles"
+    "location": "Blue Ridge",
+    "name": "Bill Bob"
 }
 ###
 
 
-PUT https://vwdwtjke27.execute-api.us-east-2.amazonaws.com/prod/animals?id=e3f1a82b-06cd-471b-ba63-d407e0d10938
+PUT https://vwdwtjke27.execute-api.us-east-2.amazonaws.com/prod/animals?id=F21EADC8-FE69-4A49-BD31-B04766D971C6
 content-type: application/json
 
 {
-    "location": "Boston"
+    "location": "Orlando",
+    "name": "Florida Bob"
 }
 ###
 

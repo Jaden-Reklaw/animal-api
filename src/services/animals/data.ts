@@ -1,5 +1,4 @@
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda";
-import { v4 } from "uuid";
 import {
     DynamoDBDocumentClient,
     GetCommand,
@@ -9,11 +8,13 @@ import {
     DeleteCommand
 } from "@aws-sdk/lib-dynamodb";
 import { validateAsAnimal } from "../../validators/validator";
+import { parseJSON } from "../../utils/parseUtil";
+import { createRandomId } from "../../utils/uuidUtil";
 
 export async function postAnimal(event: APIGatewayProxyEvent, ddbClient: DynamoDBDocumentClient): Promise<APIGatewayProxyResult> {
 
-    const randomId = v4().toUpperCase();
-    const item = JSON.parse(event.body);
+    const randomId = createRandomId()
+    const item = parseJSON(event.body);
     item.id = randomId;
     validateAsAnimal(item);
 
@@ -63,29 +64,34 @@ export async function updateAnimal(event: APIGatewayProxyEvent, ddbClient: Dynam
 
     if (event.queryStringParameters && ('id' in event.queryStringParameters) && event.body) {
 
-        const parsedBody = JSON.parse(event.body);
+        const parsedBody = parseJSON(event.body);
         const animalId = event.queryStringParameters['id'];
-        const requestBodyKey = Object.keys(parsedBody)[0];
-        const requestBodyValue = parsedBody[requestBodyKey];
+        const keys = Object.keys(parsedBody);
+        
+        const updateExpressionParts: string[] = [];
+        const expressionAttributeValues: Record<string, unknown> = {};
+        const expressionAttributeNames: Record<string, string> = {};
+
+        keys.forEach((key, index) => {
+            updateExpressionParts.push(`#field${index} = :val${index}`);
+            expressionAttributeValues[`:val${index}`] = parsedBody[key];
+            expressionAttributeNames[`#field${index}`] = key;
+        });
 
         const updateResult = await ddbClient.send(new UpdateCommand({
             TableName: process.env.TABLE_NAME,
             Key: {
                 'id': animalId
             },
-            UpdateExpression: 'set #zzzNew = :new',
-            ExpressionAttributeValues: {
-                ':new': requestBodyValue
-            },
-            ExpressionAttributeNames: {
-                '#zzzNew': requestBodyKey
-            },
+            UpdateExpression: `set ${updateExpressionParts.join(', ')}`,
+            ExpressionAttributeValues: expressionAttributeValues,
+            ExpressionAttributeNames: expressionAttributeNames,
             ReturnValues: 'UPDATED_NEW'
         }));
 
         return {
-            statusCode: 204,
-            body: JSON.stringify(updateResult)
+            statusCode: 200,
+            body: JSON.stringify(updateResult.Attributes)
         }
 
     }
